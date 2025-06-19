@@ -32,10 +32,7 @@ function NavBar({ onAddRecipe, onToggleSidebar, isSidebarVisible }) {
 
     const [selectedCategory, setSelectedCategory] = useState(null);
 
-    // Abre/cierra el menú desplegable de una categoría
-    const handleCategoryClick = (category) => {
-        setSelectedCategory(selectedCategory === category ? null : category);
-    };
+
 
     // Función para redirigir según la categoría
     const redirectToSite = (category) => {
