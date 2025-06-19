@@ -1,0 +1,192 @@
+TODAVIA NO ME CONTESTE DEJAME PASARTE TODO EL PROJECTO ESTE ES Menu.js
+
+// src/Menu.js//
+
+import React from 'react';
+import './Menu.css'; // Asegúrate de que este CSS existe y está vinculado correctamente
+// (Si no tienes Menu.css, puedes mover sus estilos a App.css o crearlo)
+
+
+// Este componente Menu ahora recibe las imágenes a mostrar desde App.js
+function Menu({ manejarClickImagen, categoriesData, categoryDisplayImages, className }) {
+    // Función auxiliar para obtener la clave de la receta si el nombre de categoría coincide
+    const getRecipeKey = (categoryName) => {
+        // Convierte el nombre de la categoría a la clave esperada en el objeto 'recetas'
+        // Por ejemplo: "Huevos Rancheros" -> "huevosrancheros"
+        // Pero si tus claves son 'huevos', 'pasta', etc., necesitarás un mapeo.
+        // Aquí asumo que tus claves de receta son en minúsculas y sin espacios.
+        if (categoryName === 'Huevos') return 'huevos';
+        if (categoryName === 'Pasta Alfredo') return 'pasta';
+        if (categoryName === 'Sopa de Tomate Cremosa') return 'sopa';
+        if (categoryName === 'Ensalada Mediterránea') return 'ensalada';
+        // Si tus categorías en el menú son diferentes a los nombres de las recetas principales,
+        // DEBES ajustar esta lógica.
+        return categoryName.toLowerCase().replace(/\s/g, ''); // Fallback general
+    };
+
+    return (
+        // La clase 'hidden' se pasa desde App.js para controlar la visibilidad del sidebar
+        <div className={`menu-container ${className}`}>
+            <h2>Categorías</h2>
+            <ul>
+                {categoriesData.map((category) => (
+                    <li key={category.id} onClick={() => manejarClickImagen(getRecipeKey(category.name))}>
+                        <div className="category-item">
+                            {/* Usa la imagen del mapeo pasado desde App.js */}
+                            <img
+                                src={categoryDisplayImages[category.name]} // <-- Aquí se usa la imagen
+                                alt={category.name}
+                            />
+                            <p>{category.name}</p>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+export default Menu;
+
+
+TODAVIA NO ME CONTESTE DEJAME PASARTE TODO EL PROJECTO ESTE ES Menu.css
+
+/*MENU.CSS*/
+
+/* src/Menu.css */
+
+body {
+    /* Esta regla 'body' no debería estar en Menu.css, ya que es un estilo global.
+           Si la tienes aquí, afectará a toda la página. Es mejor moverla a App.css.
+           La mantengo porque me la has proporcionado, pero es una observación. */
+    background-color: rgb(127, 204, 255);
+}
+
+.menu {
+    width: 25%;
+    height: 45.5vh;
+    /* Tu altura actual. El scroll aparecerá si el contenido la excede. */
+    background-color: #8ecafc;
+    padding: 10px;
+    overflow-y: auto;
+    /* <-- CLAVE: Permite el desplazamiento vertical cuando el contenido excede la altura. */
+    position: fixed;
+    color: #111111;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    /* Asegura que esté por encima de otros elementos. */
+    transition: transform 0.3s ease-in-out;
+    /* Para la animación de mostrar/ocultar el menú. */
+}
+
+/* Estilos para la barra de desplazamiento (para navegadores WebKit como Chrome/Safari) */
+.menu::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho de la barra de desplazamiento */
+}
+
+.menu::-webkit-scrollbar-track {
+    background: #aeddfd;
+    /* Color del fondo de la pista de la barra (un poco más oscuro que el menú) */
+    border-radius: 10px;
+}
+
+.menu::-webkit-scrollbar-thumb {
+    background: #6699ff;
+    /* Color de la "manija" de la barra */
+    border-radius: 10px;
+}
+
+.menu::-webkit-scrollbar-thumb:hover {
+    background: #4d7edb;
+    /* Color al pasar el ratón por la "manija" */
+}
+
+/* Clase para ocultar el menú (asumiendo que App.js la añade) */
+.menu.hidden {
+    transform: translateX(-100%);
+    /* Desplaza el menú completamente fuera de la vista */
+}
+
+
+.menu-item {
+    margin-bottom: 10px;
+    display: flex;
+    /* Para alinear la imagen y el texto horizontalmente */
+    align-items: center;
+    /* Alinea verticalmente los elementos dentro del item */
+    padding: 5px;
+    /* Añade un pequeño padding alrededor del item para el hover */
+    cursor: pointer;
+    /* Indica que es clickeable */
+    transition: background-color 0.2s ease;
+    /* Transición suave para el efecto hover */
+    border-radius: 5px;
+    /* Bordes redondeados para el item del menú */
+}
+
+.menu-item:hover {
+    background-color: #7ab9f7;
+    /* Color de fondo al pasar el ratón */
+}
+
+.menu-item img {
+    width: 60px;
+    /* Tamaño más manejable para imágenes de menú */
+    height: 60px;
+    /* Asegura que la imagen sea cuadrada */
+    border-radius: 50%;
+    /* Hace la imagen circular */
+    border: 2px solid #ffffff;
+    object-fit: cover;
+    /* Asegura que la imagen cubra el espacio sin distorsionarse */
+    margin-right: 10px;
+    /* Espacio entre la imagen y el texto */
+    flex-shrink: 0;
+    /* Previene que la imagen se encoja si el texto es largo */
+}
+
+.menu-item p {
+    text-align: left;
+    /* Alinea el texto a la izquierda dentro del item */
+    margin-top: 0;
+    /* Elimina el margen superior por defecto */
+    margin-bottom: 0;
+    /* Elimina el margen inferior por defecto */
+    font-weight: bold;
+    flex-grow: 1;
+    /* Permite que el párrafo ocupe el espacio restante */
+}
+
+/* Esta regla 'img' es muy genérica y afectará a TODAS las imágenes.
+   Si solo quieres que afecte a la imagen principal de la receta, es mejor moverla
+   a App.css y ser más específico (ej. .recipe-container img).
+   La mantengo aquí porque me la has proporcionado. */
+img {
+    width: 70%;
+    height: 90%;
+    max-width: 100%;
+    /* Asegura que no se desborde de su contenedor */
+    display: block;
+    /* Para centrar con margin: auto */
+    margin: 0 auto;
+    /* Centra la imagen */
+}
+
+.receta-nombre {
+    border-radius: 15px;
+    border: 2px solid #ffffff;
+    background-color: #cccccc;
+    padding: 10px;
+}
+
+.receta-nombre.comida1 {
+    color: blue;
+    background-color: lightblue;
+}
+
+.receta-nombre.comida2 {
+    color: green;
+    background-color: lightgreen;
+}

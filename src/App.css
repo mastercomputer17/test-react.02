@@ -1,0 +1,317 @@
+/* --- ESTILOS GLOBALES Y CONTENEDORES PRINCIPALES --- */
+
+/* Asegura que HTML y BODY permitan el scroll vertical de toda la página y eviten scroll horizontal. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Evita específicamente el scroll horizontal global */
+  overflow-y: auto;
+  /* Permite el scroll vertical de toda la página si el contenido es más largo. */
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(127, 204, 255);
+}
+
+/* Contenedor principal de la aplicación. Usa Flexbox para alinear la barra lateral y el contenido. */
+.App {
+  display: flex;
+  min-height: 100vh;
+  /* Asegura que la aplicación ocupe al menos la altura de la vista */
+}
+
+/* Contenedor del cuerpo principal (NavBar + Contenido de receta/formulario).
+   Es un flex container en columna. */
+.App-body {
+  display: flex;
+  flex-direction: column;
+  /* Apila NavBar, Contenido de Receta/Formulario */
+  flex-grow: 1;
+  /* Permite que el App-body crezca y ocupe todo el espacio restante */
+  flex-shrink: 1;
+  /* Permite que el App-body se encoja si es necesario */
+  flex-basis: auto;
+  /* Ocupa el tamaño del contenido o el espacio restante */
+  min-width: 0;
+  /* ¡IMPORTANTE! Permite que el flex item se encoja sin desbordar. */
+
+  padding: 10px 20px;
+  box-sizing: border-box;
+  margin-left: 260px;
+  /* Margen inicial para dejar espacio a la barra lateral */
+  transition: margin-left 0.3s ease;
+}
+
+/* Clase que se añade a .App-body cuando la barra lateral está oculta */
+.App-body.sidebar-hidden {
+  margin-left: 0;
+  /* El contenido principal ocupa todo el ancho */
+}
+
+/* Estilo del contenedor de navegación (NavBar). */
+.nav-container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 20px auto;
+  justify-content: space-between;
+  /* Mantiene espacio entre ítems en escritorio */
+  align-items: center;
+  background-color: #333;
+  padding: 10px 20px;
+  color: white;
+  box-sizing: border-box;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  /* Permite que los elementos se envuelvan a la siguiente línea */
+  gap: 10px;
+  /* Espacio entre los elementos flex */
+}
+
+/* Estilo de los botones dentro del NavBar */
+.nav-container button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  white-space: nowrap;
+  /* Evita que el texto del botón se rompa en línea */
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+  /* Evita que los botones se encojan en distribuciones flexibles */
+}
+
+.nav-container button:hover {
+  background-color: #45a049;
+}
+
+/* Estilo del contenedor de receta (el panel que muestra los detalles de la comida) */
+.recipe-container {
+  padding: 20px;
+  background-color: #fff;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Detalles de la comida (contenido dentro de .recipe-container) */
+.details {
+  width: 100%;
+  padding: 15px;
+  background-color: hsla(182, 100%, 73%, 0.275);
+  text-align: center;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.details h1,
+.details h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #333;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.details .image-details img {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding: 0;
+  margin: 0 auto;
+  width: fit-content;
+  text-align: left;
+}
+
+.details ul li {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+
+.details p {
+  text-align: justify;
+  max-width: 700px;
+  margin: 10px auto;
+  line-height: 1.6;
+  color: #555;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Estilo del formulario para añadir recetas */
+.recipe-form {
+  background-color: #0083cf75;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 900px;
+  margin: 20px auto;
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-form label {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+  font-weight: bold;
+  color: #333;
+}
+
+.recipe-form input,
+.recipe-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.recipe-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.recipe-form button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.recipe-form button:hover {
+  background-color: #45a049;
+}
+
+/* Clases de color (si las usas para resaltar texto) */
+.comida1 {
+  color: blue;
+}
+
+.comida2 {
+  color: green;
+}
+
+
+/* --- MEDIA QUERIES PARA RESPONSIVIDAD (App.css) --- */
+
+/* Para tabletas y pantallas más pequeñas (máx. 768px de ancho) */
+@media (max-width: 768px) {
+  .App-body {
+    margin-left: 0;
+    /* El menú lateral se oculta por JS, no hay margen */
+    padding: 10px;
+  }
+
+  .nav-container {
+    padding: 8px 10px;
+    justify-content: center;
+    /* Centra los botones cuando se envuelven */
+    /* Si quieres que empiecen a apilarse aquí en lugar de 480px,
+           puedes añadir flex-direction: column; aquí también.
+           Por ahora, mantengo el comportamiento de wrap horizontal hasta 480px. */
+    gap: 5px;
+  }
+
+  .nav-container button {
+    font-size: 0.85em;
+    padding: 6px 12px;
+    flex-basis: auto;
+    /* Permite que el tamaño de los botones se ajuste al contenido */
+    max-width: 100%;
+    /* Asegura que no desborden */
+  }
+
+  .recipe-container,
+  .recipe-form {
+    width: 100%;
+    max-width: none;
+    /* Elimina la restricción de max-width en móvil para ocupar el espacio */
+    padding: 15px;
+  }
+
+  .details {
+    padding: 10px;
+  }
+
+  .details .image-details img {
+    max-width: 100%;
+  }
+
+  .details p {
+    font-size: 0.95em;
+    text-align: left;
+  }
+}
+
+/* Para teléfonos móviles muy pequeños (máx. 480px de ancho) */
+@media (max-width: 480px) {
+  .App-body {
+    padding: 5px;
+  }
+
+  .nav-container {
+    flex-direction: column;
+    /* ¡CLAVE! Apila los botones verticalmente */
+    align-items: stretch;
+    /* Estira los botones para que ocupen todo el ancho del contenedor */
+    padding: 5px 8px;
+    gap: 5px;
+    /* Sigue manteniendo el espacio entre ellos, ahora verticalmente */
+    /* Es importante que no haya un justify-content: space-between; aquí que anule align-items: stretch; */
+  }
+
+  .nav-container button {
+    margin-left: 0;
+    /* Elimina cualquier margen izquierdo que pudiera desalinear */
+    margin-bottom: 5px;
+    /* Añade un pequeño espacio entre botones apilados */
+    font-size: 0.8em;
+    padding: 8px 10px;
+    width: 100%;
+    /* Asegura que cada botón ocupe el 100% del ancho disponible */
+  }
+
+  .recipe-container,
+  .recipe-form {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .details .image-details img {
+    max-width: 100%;
+  }
+
+  .details p {
+    font-size: 0.9em;
+  }
+}

@@ -1,0 +1,138 @@
+/* src/Menu.css */
+
+/* El contenedor principal del menú lateral */
+.menu-container {
+    width: 30%;
+    height: 95.5vh;
+    /* Altura definida: clave para el scroll */
+    background-color: #8ecafc;
+    padding: 10px;
+    overflow-y: auto;
+    /* ¡CLAVE! Permite el desplazamiento vertical cuando el contenido excede la altura. */
+    position: fixed;
+    /* Mantiene el menú fijo en la pantalla */
+    color: #111111;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    list-style: none;
+    /* Asegura que esté por encima de otros elementos */
+    transition: transform 0.3s ease-in-out;
+    /* Para la animación de mostrar/ocultar el menú */
+    box-sizing: border-box;
+    /* Incluye padding y borde en el ancho/alto total */
+}
+
+/* Estilos para la barra de desplazamiento (para navegadores WebKit como Chrome/Safari) */
+.menu-container::-webkit-scrollbar {
+    width: 8px;
+    /* Ancho de la barra de desplazamiento */
+}
+
+.menu-container::-webkit-scrollbar-track {
+    background: #aeddfd;
+    /* Color del fondo de la pista de la barra */
+    border-radius: 10px;
+}
+
+.menu-container::-webkit-scrollbar-thumb {
+    background: #6699ff;
+    /* Color de la "manija" de la barra */
+    border-radius: 10px;
+}
+
+.menu-container::-webkit-scrollbar-thumb:hover {
+    background: #4d7edb;
+    /* Color al pasar el ratón por la "manija" */
+}
+
+/* Clase para ocultar el menú (se añade desde App.js) */
+.menu-container.hidden {
+    transform: translateX(-100%);
+    /* Desplaza el menú completamente fuera de la vista */
+}
+
+/* Estilo para cada elemento individual dentro de las categorías del menú */
+.category-item {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    /* Apila los elementos verticalmente (imagen arriba, texto abajo) */
+    align-items: center;
+    /* Centra los elementos horizontalmente (imagen y texto) */
+    padding: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 5px;
+    text-align: center;
+    /* Centra el texto del párrafo también */
+}
+
+.category-item:hover {
+    background-color: #7ab9f7;
+}
+
+/* Estilo para las imágenes dentro de los elementos de categoría */
+.category-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    object-fit: cover;
+    margin-bottom: 5px;
+    /* Añade un pequeño espacio debajo de la imagen */
+    margin-right: 0;
+    /* Elimina el margen derecho que los separaba horizontalmente */
+    flex-shrink: 0;
+}
+
+/* Estilo para el párrafo del nombre de la categoría */
+.category-item p {
+    text-align: center;
+    /* Centra el texto debajo de la imagen */
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: bold;
+    flex-grow: 0;
+
+    /* ¡CLAVE! Esto hace que el texto se "encoja" (escalado de fuente) */
+    /* La fuente será al menos 0.7rem, preferiblemente calc(0.8rem + 0.4vw), y un máximo de 1rem */
+    font-size: clamp(0.7rem, calc(0.8rem + 0.4vw), 1rem);
+
+    /* Eliminar propiedades que causan puntos o corte */
+    /* white-space: nowrap; */
+    /* Se elimina para PERMITIR que el texto se envuelva si no cabe */
+    /* overflow: hidden; */
+    /* Se elimina para que las letras NO desaparezcan */
+    /* text-overflow: ellipsis; */
+    /* Se elimina para NO mostrar puntos suspensivos */
+
+    /* Permite que palabras muy largas se rompan para caber en el contenedor */
+    word-break: break-word;
+
+    /* Asegura que el párrafo no exceda el ancho del contenedor si se envuelve */
+    max-width: 100%;
+}
+
+
+/* Estas reglas de 'receta-nombre' parecen ser para otros componentes o usos,
+   no directamente relacionados con la estructura del menú lateral que estamos ajustando. */
+.receta-nombre {
+    border-radius: 15px;
+    border: 2px solid #ffffff;
+    background-color: #cccccc;
+    padding: 10px;
+}
+
+.receta-nombre.comida1 {
+    color: blue;
+    background-color: lightblue;
+}
+
+.receta-nombre.comida2 {
+    color: green;
+    background-color: lightgreen;
+}
+.menu-header{
+    margin-left: 49px;
+}
