@@ -154,7 +154,7 @@ function App() {
     setMostrarFormulario(false);
   };
 
-  const currentDate = new Date().toLocaleDateString();
+
 
   return (
     <div className="App">
