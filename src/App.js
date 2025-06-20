@@ -1,60 +1,61 @@
-//APP.JS src/App.js
-
+// src/App.js
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Menu from './Menu';
 import NavBar from './NavBar';
 
-// --- IMPORTACIONES DE IMÁGENES ---
+// --- IMPORTACIONES DE IMÁGENES FIJAS ---
+// Cuando importas una imagen así, React/Webpack la procesa.
+// La variable (ej. 'desayuno1') contendrá la URL final de la imagen después de la construcción.
 import desayuno1 from './images/desayuno1.jpg';
 import almuerzo2 from './images/almuerzo2.png';
 import sena3 from './images/sena3.png';
 import postre4 from './images/postre4.png';
 
-// Mapa de imágenes por defecto según el tipo de comida
+// Este objeto ahora usa las variables importadas, que ya contienen la URL final.
+// Esto es CRUCIAL para que se guarden correctamente en localStorage.
 const defaultImagesByType = {
   desayuno: desayuno1,
   almuerzo: almuerzo2,
   cena: sena3,
   postre: postre4,
-  default: desayuno1
+  default: desayuno1 // Fallback por si acaso
 };
 
-// Definición de las recetas iniciales
 const recetasIniciales = {
   huevos: {
     nombre: 'Huevos Rancheros',
     ingredientes: ['2 Huevos', '1 Tortilla de maíz', 'Salsa ranchera', 'Frijoles refritos', 'Queso fresco'],
     instrucciones: '1. Calienta la tortilla y los frijoles.<br />2. Fríe los huevos al gusto.<br />3. Sirve los huevos sobre la tortilla con frijoles, salsa ranchera y queso.',
-    imagen: desayuno1, // Usando tu imagen de desayuno
+    imagen: desayuno1, // Usa la importación directa
     tipo: 'desayuno',
   },
   pasta: {
     nombre: 'Pasta Alfredo',
     ingredientes: ['200g Pasta fettuccine', '50g Mantequilla', '1 taza Crema para batir', '1/2 taza Queso parmesano rallado', 'Sal', 'Pimienta'],
     instrucciones: '1. Cocina la pasta según las instrucciones del paquete.<br />2. Mientras tanto, derrite la mantequilla en una sartén.<br />3. Agrega la crema y cocina a fuego lento.<br />4. Incorpora el queso parmesano y sazona con sal y pimienta.<br />5. Mezcla la salsa con la pasta escurrida.',
-    imagen: almuerzo2, // Usando tu imagen de almuerzo
+    imagen: almuerzo2, // Usa la importación directa
     tipo: 'almuerzo',
   },
   sopa: {
     nombre: 'Sopa de Tomate Cremosa',
     ingredientes: ['1 kg Tomates maduros', '1 Cebolla', '2 dientes de Ajo', 'Caldo de verduras', 'Crema de leche', 'Albahaca fresca'],
     instrucciones: '1. Sofríe cebolla y ajo.<br />2. Añade tomates y caldo, cocina.<br />3. Licúa la mezcla, cuela.<br />4. Calienta, añade crema y albahaca. Sirve.',
-    imagen: sena3, // Usando tu imagen de cena
+    imagen: sena3, // Usa la importación directa
     tipo: 'cena',
   },
   ensalada: {
     nombre: 'Ensalada Mediterránea',
     ingredientes: ['Lechuga variada', 'Tomates cherry', 'Pepino', 'Aceitunas Kalamata', 'Queso feta', 'Aderezo de aceite y limón'],
     instrucciones: '1. Lava y corta los vegetales.<br />2. Desmorona el queso feta.<br />3. Combina todos los ingredientes en un bol grande.<br />4. Aliña con aceite de oliva, zumo de limón, sal y pimienta.',
-    imagen: almuerzo2, // Usando tu imagen de almuerzo
+    imagen: almuerzo2, // Usa la importación directa
     tipo: 'almuerzo',
   },
   postreManzana: {
     nombre: 'Crumble de Manzana',
     ingredientes: ['Manzanas', 'Avena', 'Harina', 'Azúcar', 'Canela'],
     instrucciones: '1. Corta las manzanas y mézclalas con canela.<br />2. Haz el crumble con avena, harina y azúcar.<br />3. Hornea hasta dorado.',
-    imagen: postre4, // Usando tu imagen de postre
+    imagen: postre4, // Usa la importación directa
     tipo: 'postre',
   }
 };
@@ -62,13 +63,27 @@ const recetasIniciales = {
 function App() {
   const [recetas, setRecetas] = useState(() => {
     const savedRecipes = localStorage.getItem('recetas');
-    return savedRecipes ? JSON.parse(savedRecipes) : recetasIniciales;
+    if (savedRecipes) {
+      return JSON.parse(savedRecipes);
+    }
+    // Si no hay recetas guardadas, usa las iniciales y guárdalas por primera vez
+    // Esto asegura que las URLs de las imágenes fijas se guarden desde el inicio.
+    localStorage.setItem('recetas', JSON.stringify(recetasIniciales));
+    return recetasIniciales;
   });
 
-  const [recetaSeleccionada, setRecetaSeleccionada] = useState(recetas.huevos);
+  const [recetaSeleccionada, setRecetaSeleccionada] = useState(() => {
+    const savedRecipes = localStorage.getItem('recetas');
+    if (savedRecipes) {
+      const parsedRecipes = JSON.parse(savedRecipes);
+      // Intentar seleccionar la primera receta disponible o una por defecto
+      return parsedRecipes.huevos || Object.values(parsedRecipes)[0];
+    }
+    return recetasIniciales.huevos;
+  });
+
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-
   const [selectedFoodType, setSelectedFoodType] = useState('desayuno');
 
   const categoriesData = Object.keys(recetas).map(key => ({
@@ -76,8 +91,7 @@ function App() {
     name: recetas[key].nombre
   }));
 
-  // Este objeto `allCategoryDisplayImages` es el que pasa las imágenes al componente Menu.
-  // Las claves son los `nombre` de las recetas, y los valores son las `imagen` de esas recetas.
+  // allCategoryDisplayImages debe usar la imagen que ya está en el objeto de receta
   const allCategoryDisplayImages = {};
   Object.keys(recetas).forEach(key => {
     allCategoryDisplayImages[recetas[key].nombre] = recetas[key].imagen;
@@ -85,10 +99,12 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('recetas', JSON.stringify(recetas));
+    // Asegurarse de que recetaSeleccionada siempre sea un objeto válido
     if (!recetaSeleccionada || !recetas[recetaSeleccionada.nombre.toLowerCase().replace(/\s/g, '')]) {
       setRecetaSeleccionada(recetas.huevos || Object.values(recetas)[0]);
     }
   }, [recetas, recetaSeleccionada]);
+
 
   const manejarClickCategoria = (categoryName) => {
     const recetaKey = Object.keys(recetas).find(key => {
@@ -99,7 +115,7 @@ function App() {
       setRecetaSeleccionada(recetas[recetaKey]);
     } else {
       console.warn(`No se encontró una receta para la categoría: ${categoryName}.`);
-      setRecetaSeleccionada(recetas.huevos || Object.values(recetas)[0]);
+      setRecetaSeleccionada(recetas.huevos || Object.values(recetas)[0]); // Fallback
     }
 
     setMostrarFormulario(false);
@@ -111,7 +127,7 @@ function App() {
   const handleAddRecipe = () => {
     setMostrarFormulario(true);
     setIsSidebarVisible(false);
-    setSelectedFoodType('desayuno');
+    setSelectedFoodType('desayuno'); // Default to desayuno for new recipes
   };
 
   const handleSubmit = (event) => {
@@ -121,19 +137,27 @@ function App() {
     const instrucciones = event.target.instrucciones.value.replace(/\n/g, '<br />');
 
     const imagenFile = event.target.imagen.files[0];
-    let imagenUrl;
+    let imagenToSave; // Esta variable contendrá la URL final (sea fija o Base64 si implementas)
 
     if (imagenFile) {
-      imagenUrl = URL.createObjectURL(imagenFile);
+      // Por ahora, si el usuario sube una imagen, la ignoramos para evitar el problema del blob:
+      // Si más adelante quieres que las imágenes subidas por el usuario persistan,
+      // tendrías que implementar la lógica de Base64 aquí.
+      // Por el momento, si sube una imagen, se usará la imagen por defecto.
+      console.warn("La carga de imágenes por el usuario no está persistente sin Base64/servidor. Usando imagen por defecto.");
+      imagenToSave = defaultImagesByType[selectedFoodType] || defaultImagesByType.default;
+
     } else {
-      imagenUrl = defaultImagesByType[selectedFoodType] || defaultImagesByType.default;
+      // SI NO SE SELECCIONA UNA IMAGEN, USA LA IMAGEN FIJA CORRESPONDIENTE
+      // La variable importada (ej. desayuno1) YA CONTIENE la URL pública.
+      imagenToSave = defaultImagesByType[selectedFoodType] || defaultImagesByType.default;
     }
 
     const nuevaReceta = {
       nombre,
       ingredientes,
       instrucciones,
-      imagen: imagenUrl,
+      imagen: imagenToSave, // Guardamos la URL final (fija o Base64)
       tipo: selectedFoodType,
     };
 
@@ -146,22 +170,20 @@ function App() {
 
     setMostrarFormulario(false);
     setIsSidebarVisible(true);
-    setRecetaSeleccionada(nuevaReceta);
+    setRecetaSeleccionada(nuevaReceta); // Selecciona la nueva receta
   };
 
   const toggleSidebar = () => {
     setIsSidebarVisible(prev => !prev);
-    setMostrarFormulario(false);
+    setMostrarFormulario(false); // Hide form when toggling sidebar
   };
-
-
 
   return (
     <div className="App">
       <Menu
         onSelectCategory={manejarClickCategoria}
         categoriesData={categoriesData}
-        categoryDisplayImages={allCategoryDisplayImages} // Aquí se pasa el objeto de imágenes
+        categoryDisplayImages={allCategoryDisplayImages}
         className={!isSidebarVisible ? 'hidden' : ''}
       />
 
@@ -202,6 +224,10 @@ function App() {
             </label>
             <label>
               Imagen (opcional):
+              {/* HE COMENTADO ESTO TEMPORALMENTE: Si el usuario selecciona un archivo,
+                  por ahora no se guardará de forma persistente. Solo se usará la imagen fija.
+                  Si quieres que las imágenes subidas por el usuario persistan,
+                  tendrás que reintroducir la lógica de Base64 o un servidor. */}
               <input type="file" name="imagen" accept="image/*" />
             </label>
             <button type="submit">Guardar Receta</button>
@@ -211,6 +237,7 @@ function App() {
             <h1>Detalles de la Comida</h1>
             <h2>{recetaSeleccionada.nombre}</h2>
             <div className="image-details">
+              {/* La 'src' de la imagen será la URL pública de la imagen fija */}
               <img src={recetaSeleccionada.imagen} alt={recetaSeleccionada.nombre} />
             </div>
             <h2>Ingredientes</h2>
